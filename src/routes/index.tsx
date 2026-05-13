@@ -94,11 +94,50 @@ const LOCATIONS: Record<
 };
 
 const NAV_LINKS = [
-  "Home",
-  "Shop",
-  "About Us",
-  "Blog",
-  "Contact",
+  { name: "Home", href: "#" },
+  { name: "Services", href: "#services", hasDropdown: true, dropdownKey: "services" },
+  { name: "Home Service", href: "#", hasDropdown: true, dropdownKey: "homeService" },
+  { name: "Shop", href: "#", hasDropdown: true, dropdownKey: "shop" },
+  { name: "Price List", href: "#pricing", hasDropdown: true, dropdownKey: "priceList" },
+  { name: "About Us", href: "#about" },
+];
+
+const SUB_SERVICES = [
+  {
+    name: "Hair Cut",
+    sub: ["Skin Fade Haircut", "Medium Fade Haircut", "Classic Hot Towel Shave"]
+  },
+  {
+    name: "Braids",
+    sub: ["Twist Braids", "Cornrow Braids"]
+  },
+  { name: "Hair  Perm & Styling" },
+  { name: "Grooming Packages" },
+  { name: "Beard Trimming" },
+  { name: "MANICURE FOR MEN" },
+  { name: "PEDICURE FOR MEN" },
+  { name: "FACIAL Treatment" },
+  { name: "Hair Removal" },
+];
+
+const PRICE_LIST_SUB = [
+  { name: "Haircut" },
+  { name: "Hair Perm" },
+  { name: "Hair Coloring & Styling" },
+  { name: "Braids" },
+  { name: "Beard Lineup & Trimming" },
+  { name: "Manicure & Pedicure" },
+  { name: "Facial Treatment" },
+  { name: "Waxing" },
+];
+
+const SHOP_SUB = [
+  { name: "Hair Styling" },
+  { name: "Hair Care" },
+  { name: "Beard Care" },
+  { name: "Shave" },
+  { name: "Body" },
+  { name: "Gift Sets" },
 ];
 
 const SERVICES = [
@@ -356,6 +395,19 @@ function Wonderstouch() {
   const [reviewIdx, setReviewIdx] = useState(0);
   const [bookOpen, setBookOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const navRef = useRef<HTMLDivElement>(null);
+
+  // Click away for dropdowns
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (navRef.current && !navRef.current.contains(event.target as Node)) {
+        setActiveDropdown(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // styles + fonts
   useEffect(() => {
@@ -431,7 +483,7 @@ function Wonderstouch() {
         if (d?.country_code === "TR") setLocation("istanbul");
         else if (d?.country_code === "AE") setLocation("dubai");
       })
-      .catch(() => {})
+      .catch(() => { })
       .finally(() => clearTimeout(t));
   }, []);
 
@@ -464,31 +516,154 @@ function Wonderstouch() {
           justifyContent: "space-between",
         }}
       >
-        <div>
-          <div
-            className="bebas"
-            style={{ fontSize: 28, color: "#D4AF37", letterSpacing: "0.2em", lineHeight: 1 }}
-          >
-            WONDERSTOUCH
-          </div>
-          <div
-            style={{
-              fontSize: 9,
-              color: "#888",
-              letterSpacing: "0.25em",
-              textTransform: "uppercase",
-              marginTop: 4,
-            }}
-          >
-            GROOMING • BARBERSHOP
-          </div>
+        <div style={{ height: 85, marginLeft: 20 }}>
+          <img 
+            src="/wonderstouch logo.png" 
+            alt="Wonderstouch Logo" 
+            style={{ height: "100%", width: "auto", display: "block" }} 
+          />
         </div>
 
-        <div className="desktop-only" style={{ display: "flex", gap: 30 }}>
+        <div className="desktop-only" style={{ display: "flex", gap: 24, alignItems: "center" }} ref={navRef}>
           {NAV_LINKS.map((l) => (
-            <a key={l} className="ws-nav-link">
-              {l}
-            </a>
+            <div key={l.name} style={{ position: "relative" }}>
+              <a
+                href={l.href}
+                className="ws-nav-link"
+                style={{ display: "flex", alignItems: "center", gap: 4, whiteSpace: "nowrap" }}
+                onClick={(e) => {
+                  if (l.hasDropdown) {
+                    e.preventDefault();
+                    setActiveDropdown(activeDropdown === l.dropdownKey ? null : (l.dropdownKey || null));
+                  } else if (l.href.startsWith("#") && l.href !== "#") {
+                    e.preventDefault();
+                    document.querySelector(l.href)?.scrollIntoView({ behavior: "smooth" });
+                  }
+                }}
+              >
+                {l.name}
+                {l.hasDropdown && (
+                  <ChevronDown
+                    size={14}
+                    style={{
+                      transform: activeDropdown === l.dropdownKey ? "rotate(180deg)" : "none",
+                      transition: "transform 0.3s"
+                    }}
+                  />
+                )}
+              </a>
+
+              {(l.dropdownKey === "services" || l.dropdownKey === "homeService") && activeDropdown === l.dropdownKey && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "100%",
+                    left: 0,
+                    background: "#000",
+                    padding: "20px",
+                    minWidth: "260px",
+                    boxShadow: "0 10px 30px rgba(0,0,0,0.8)",
+                    border: "1px solid #222",
+                    zIndex: 1100,
+                    marginTop: 10,
+                  }}
+                >
+                  {SUB_SERVICES.map((s) => (
+                    <div key={s.name} style={{ marginBottom: 15 }}>
+                      <div
+                        style={{
+                          fontSize: 13,
+                          color: "#fff",
+                          fontWeight: 600,
+                          letterSpacing: "0.1em",
+                          marginBottom: s.sub ? 8 : 0,
+                          cursor: "pointer"
+                        }}
+                      >
+                        {s.name}
+                      </div>
+                      {s.sub && (
+                        <div style={{ paddingLeft: 12, display: "flex", flexDirection: "column", gap: 6 }}>
+                          {s.sub.map((sub) => (
+                            <div key={sub} style={{ fontSize: 11, color: "#888", cursor: "pointer", transition: "color 0.2s" }} onMouseEnter={(e) => e.currentTarget.style.color = "#D4AF37"} onMouseLeave={(e) => e.currentTarget.style.color = "#888"}>
+                              {sub}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {l.dropdownKey === "priceList" && activeDropdown === l.dropdownKey && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "100%",
+                    left: 0,
+                    background: "#000",
+                    padding: "20px",
+                    minWidth: "200px",
+                    boxShadow: "0 10px 30px rgba(0,0,0,0.8)",
+                    border: "1px solid #222",
+                    zIndex: 1100,
+                    marginTop: 10,
+                  }}
+                >
+                  {PRICE_LIST_SUB.map((s) => (
+                    <div
+                      key={s.name}
+                      style={{
+                        fontSize: 14,
+                        color: "#fff",
+                        padding: "8px 0",
+                        cursor: "pointer",
+                        transition: "color 0.2s"
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.color = "#D4AF37"}
+                      onMouseLeave={(e) => e.currentTarget.style.color = "#fff"}
+                    >
+                      {s.name}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {l.dropdownKey === "shop" && activeDropdown === l.dropdownKey && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "100%",
+                    left: 0,
+                    background: "#000",
+                    padding: "20px",
+                    minWidth: "200px",
+                    boxShadow: "0 10px 30px rgba(0,0,0,0.8)",
+                    border: "1px solid #222",
+                    zIndex: 1100,
+                    marginTop: 10,
+                  }}
+                >
+                  {SHOP_SUB.map((s) => (
+                    <div 
+                      key={s.name} 
+                      style={{ 
+                        fontSize: 14, 
+                        color: "#fff", 
+                        padding: "8px 0",
+                        cursor: "pointer",
+                        transition: "color 0.2s"
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.color = "#D4AF37"}
+                      onMouseLeave={(e) => e.currentTarget.style.color = "#fff"}
+                    >
+                      {s.name}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           ))}
         </div>
 
@@ -555,8 +730,12 @@ function Wonderstouch() {
             }}
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <div className="bebas" style={{ fontSize: 24, color: "#D4AF37", letterSpacing: "0.2em" }}>
-                WONDERSTOUCH
+              <div style={{ height: 60 }}>
+                <img 
+                  src="/wonderstouch logo.png" 
+                  alt="Wonderstouch Logo" 
+                  style={{ height: "100%", width: "auto", display: "block" }} 
+                />
               </div>
               <button
                 onClick={() => setMobileOpen(false)}
@@ -576,8 +755,68 @@ function Wonderstouch() {
               }}
             >
               {NAV_LINKS.map((l) => (
-                <div key={l} className="bebas" style={{ fontSize: 42, color: "#fff" }}>
-                  {l}
+                <div key={l.name} style={{ textAlign: "center" }}>
+                  <a
+                    href={l.href}
+                    className="bebas"
+                    style={{ fontSize: 42, color: "#fff", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
+                    onClick={(e) => {
+                      if (l.hasDropdown) {
+                        e.preventDefault();
+                        setActiveDropdown(activeDropdown === l.dropdownKey ? null : (l.dropdownKey || null));
+                      } else {
+                        setMobileOpen(false);
+                        if (l.href.startsWith("#") && l.href !== "#") {
+                          e.preventDefault();
+                          document.querySelector(l.href)?.scrollIntoView({ behavior: "smooth" });
+                        }
+                      }
+                    }}
+                  >
+                    {l.name}
+                    {l.hasDropdown && (
+                      <ChevronDown
+                        size={24}
+                        style={{
+                          transform: activeDropdown === l.dropdownKey ? "rotate(180deg)" : "none",
+                          transition: "transform 0.3s"
+                        }}
+                      />
+                    )}
+                  </a>
+
+                  {(l.dropdownKey === "services" || l.dropdownKey === "homeService") && activeDropdown === l.dropdownKey && (
+                    <div style={{ marginTop: 20, display: "flex", flexDirection: "column", gap: 15 }}>
+                      {SUB_SERVICES.map((s) => (
+                        <div key={s.name}>
+                          <div style={{ fontSize: 16, color: "#D4AF37", fontWeight: 600 }}>{s.name}</div>
+                          {s.sub && (
+                            <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 6 }}>
+                              {s.sub.map((sub) => (
+                                <div key={sub} style={{ fontSize: 12, color: "#888" }}>{sub}</div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {l.dropdownKey === "priceList" && activeDropdown === l.dropdownKey && (
+                    <div style={{ marginTop: 20, display: "flex", flexDirection: "column", gap: 15 }}>
+                      {PRICE_LIST_SUB.map((s) => (
+                        <div key={s.name} style={{ fontSize: 24, color: "#D4AF37" }}>{s.name}</div>
+                      ))}
+                    </div>
+                  )}
+
+                  {l.dropdownKey === "shop" && activeDropdown === l.dropdownKey && (
+                    <div style={{ marginTop: 20, display: "flex", flexDirection: "column", gap: 15 }}>
+                      {SHOP_SUB.map((s) => (
+                        <div key={s.name} style={{ fontSize: 24, color: "#D4AF37" }}>{s.name}</div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ))}
               <LocationPills location={location} setLocation={setLocation} size="md" />
@@ -765,7 +1004,7 @@ function Wonderstouch() {
       </section>
 
       {/* ABOUT */}
-      <section className="ws-section" style={{ background: "#F5F0E8", color: "#3D3D3D" }}>
+      <section id="about" className="ws-section" style={{ background: "#F5F0E8", color: "#3D3D3D" }}>
         <div className="ws-container">
           <Reveal>
             <div
@@ -856,7 +1095,7 @@ function Wonderstouch() {
       </section>
 
       {/* SERVICES */}
-      <section className="ws-section" style={{ background: "#111111" }}>
+      <section id="services" className="ws-section" style={{ background: "#111111" }}>
         <div className="ws-container">
           <Reveal>
             <div style={{ textAlign: "center", marginBottom: 60 }}>
@@ -1274,7 +1513,7 @@ function Wonderstouch() {
       </section>
 
       {/* PRICING */}
-      <section className="ws-section" style={{ background: "#111111" }}>
+      <section id="pricing" className="ws-section" style={{ background: "#111111" }}>
         <div className="ws-container">
           <Reveal>
             <div style={{ textAlign: "center", marginBottom: 40 }}>
@@ -1565,7 +1804,7 @@ function Wonderstouch() {
       </section>
 
       {/* LOCATIONS & CONTACT */}
-      <section className="ws-section" style={{ background: "#F5F0E8", color: "#3D3D3D" }}>
+      <section id="contact" className="ws-section" style={{ background: "#F5F0E8", color: "#3D3D3D" }}>
         <div className="ws-container">
           <Reveal>
             <div
