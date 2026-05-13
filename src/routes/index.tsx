@@ -390,6 +390,28 @@ function Wonderstouch() {
   const [location, setLocation] = useState<LocationKey>("dubai");
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isDubai, setIsDubai] = useState(true);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showLocationModal, setShowLocationModal] = useState(false);
+
+  useEffect(() => {
+    const el = document.getElementById("services-scroll");
+    if (!el) return;
+    let interval: any;
+    const startScroll = () => {
+      interval = setInterval(() => {
+        if (el.scrollLeft <= 0) {
+          el.scrollLeft = el.scrollWidth * 0.66;
+        } else {
+          el.scrollLeft -= 1;
+        }
+      }, 30);
+    };
+    startScroll();
+    el.addEventListener("mouseenter", () => clearInterval(interval));
+    el.addEventListener("mouseleave", startScroll);
+    return () => clearInterval(interval);
+  }, []);
   const [reviewIdx, setReviewIdx] = useState(0);
   const [bookOpen, setBookOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -1012,42 +1034,65 @@ function Wonderstouch() {
           ))}
         </div>
       </section>
-      <section style={{ background: "#FDFCFB", padding: "60px 0", overflow: "hidden" }}>
+      <section style={{ background: "#FDFCFB", padding: "60px 0", position: "relative", overflow: "hidden" }}>
         <div className="ws-container" style={{ marginBottom: 30 }}>
-          <h2 className="bebas" style={{ fontSize: "clamp(32px, 4vw, 48px)", color: "#111" }}>
+          <h2 className="bebas" style={{ fontSize: "clamp(32px, 4vw, 48px)", color: "#111", margin: 0 }}>
             PREMIUM SERVICES
           </h2>
         </div>
 
+        {/* NAVIGATION ARROWS - OVERLAID */}
+        <button 
+          onClick={() => {
+            const el = document.getElementById("services-scroll");
+            if (el) el.scrollBy({ left: -450, behavior: "smooth" });
+          }}
+          style={{
+            position: "absolute", left: 0, top: "50%", transform: "translateY(-50%)", zIndex: 10,
+            width: 80, height: "100%", border: "none", background: "linear-gradient(90deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 100%)",
+            display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "opacity 0.3s"
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
+          onMouseLeave={(e) => (e.currentTarget.style.opacity = "0.7")}
+        >
+          <ChevronLeft size={48} color="#fff" />
+        </button>
+
+        <button 
+          onClick={() => {
+            const el = document.getElementById("services-scroll");
+            if (el) el.scrollBy({ left: 450, behavior: "smooth" });
+          }}
+          style={{
+            position: "absolute", right: 0, top: "50%", transform: "translateY(-50%)", zIndex: 10,
+            width: 80, height: "100%", border: "none", background: "linear-gradient(-90deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 100%)",
+            display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "opacity 0.3s"
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
+          onMouseLeave={(e) => (e.currentTarget.style.opacity = "0.7")}
+        >
+          <ChevronRight size={48} color="#fff" />
+        </button>
+
         <style>
           {`
-            @keyframes scrollServices {
-              0% { transform: translateX(0); }
-              100% { transform: translateX(-50%); }
-            }
-            .services-marquee {
-              display: flex;
-              width: max-content;
-              animation: scrollServices 40s linear infinite;
-              padding: 15px 0;
+            #services-scroll::-webkit-scrollbar {
+              display: none;
             }
             .service-card {
-              flex: 0 0 260px;
-              height: 320px;
-              margin: 0 10px;
+              flex: 0 0 300px;
+              height: 420px;
+              margin-right: 20px;
               position: relative;
               border-radius: 4px;
               overflow: hidden;
               display: flex;
               flex-direction: column;
               justify-content: flex-end;
-              padding: 20px;
+              padding: 30px;
               background-size: cover;
               background-position: center;
               transition: transform 0.4s ease;
-            }
-            .service-card:hover {
-              transform: translateY(-8px);
             }
             .service-card::after {
               content: '';
@@ -1063,9 +1108,19 @@ function Wonderstouch() {
           `}
         </style>
 
-        <div className="services-marquee">
-          {[...Array(2)].map((_, i) => (
-            <Fragment key={i}>
+        <div 
+          id="services-scroll"
+          style={{ 
+            display: "flex", 
+            overflowX: "hidden", 
+            padding: "20px 0",
+            scrollBehavior: "smooth",
+            msOverflowStyle: "none",
+            scrollbarWidth: "none"
+          }}
+        >
+          {[...Array(3)].map((_, loopIdx) => (
+            <React.Fragment key={loopIdx}>
               {[
                 { name: "Hair Cut", video: "/long hair cut men.mp4" },
                 { name: "Kids Hair Cut", video: "/baby men hair cut.mp4" },
@@ -1080,7 +1135,7 @@ function Wonderstouch() {
                 { name: "Pedicure", video: "/pedicure men.mp4" },
                 { name: "Facial Treatment", img: "/FACIAl.jpeg" },
               ].map((s, idx) => (
-                <div key={idx} className="service-card" style={{ backgroundImage: s.img ? `url("${s.img}")` : "none" }}>
+                <div key={`${loopIdx}-${idx}`} className="service-card" style={{ backgroundImage: s.img ? `url("${s.img}")` : "none" }}>
                   {s.video && (
                     <video
                       autoPlay
@@ -1120,7 +1175,7 @@ function Wonderstouch() {
                   </div>
                 </div>
               ))}
-            </Fragment>
+            </React.Fragment>
           ))}
         </div>
       </section>
