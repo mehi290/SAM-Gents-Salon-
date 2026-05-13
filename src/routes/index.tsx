@@ -400,17 +400,24 @@ function Wonderstouch() {
     let interval: any;
     const startScroll = () => {
       interval = setInterval(() => {
-        if (el.scrollLeft <= 0) {
-          el.scrollLeft = el.scrollWidth * 0.66;
+        // Content moves left (scrollLeft increases)
+        if (el.scrollLeft >= el.scrollWidth / 3) {
+          el.scrollLeft = 0;
         } else {
-          el.scrollLeft -= 1;
+          el.scrollLeft += 1;
         }
       }, 30);
     };
     startScroll();
-    el.addEventListener("mouseenter", () => clearInterval(interval));
-    el.addEventListener("mouseleave", startScroll);
-    return () => clearInterval(interval);
+    const handleMouseEnter = () => clearInterval(interval);
+    const handleMouseLeave = () => startScroll();
+    el.addEventListener("mouseenter", handleMouseEnter);
+    el.addEventListener("mouseleave", handleMouseLeave);
+    return () => {
+      clearInterval(interval);
+      el.removeEventListener("mouseenter", handleMouseEnter);
+      el.removeEventListener("mouseleave", handleMouseLeave);
+    };
   }, []);
   const [reviewIdx, setReviewIdx] = useState(0);
   const [bookOpen, setBookOpen] = useState(false);
