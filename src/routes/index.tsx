@@ -173,11 +173,11 @@ const SERVICES = [
 ];
 
 const GALLERY = [
-  "/men%20hair%20style.mp4",
-  "/men%20hair%20braid.jpeg",
-  "/hair%20perm%20men.mp4",
-  "/men%20hair%20color.mp4",
-  "/our%20work.mp4",
+  "/men-hair-style.mp4",
+  "/men-hair-braid.jpeg",
+  "/perm-hairstyle.mp4",
+  "/men-hair-color.mp4",
+  "/our-work.mp4",
   "/heromen.mp4",
 ];
 
@@ -1129,17 +1129,17 @@ function Wonderstouch() {
           {[...Array(3)].map((_, loopIdx) => (
             <React.Fragment key={loopIdx}>
               {[
-                { name: "Hair Cut", video: "/long hair cut men.mp4" },
-                { name: "Kids Hair Cut", video: "/baby men hair cut.mp4" },
-                { name: "Medium Fade Hair Cut", video: "/medium fade hair cut men.mp4" },
-                { name: "Skin Fade Haircut", video: "/skin fade hair cut.mp4" },
-                { name: "Twist Braids", video: "/cornrow-braids-men.mp4" },
+                { name: "Hair Cut", video: "/long-hair-cut-men.mp4" },
+                { name: "Kids Hair Cut", video: "/baby-men-hair-cut.mp4" },
+                { name: "Medium Fade Hair Cut", video: "/medium-fade-hair-cut-men.mp4" },
+                { name: "Skin Fade Haircut", video: "/skin-fade-hair-cut.mp4" },
+                { name: "Twist Braids", video: "/twist-braids.mp4" },
                 { name: "Cornrow Braids", video: "/cornrow-braids-men.mp4" },
-                { name: "Hair Perm & Styling", video: "/perm hairstyle.mp4" },
-                { name: "Grooming Packages", video: "/groooming package.mp4" },
-                { name: "Beard Trimming", video: "/beard lineup .mp4" },
+                { name: "Hair Perm & Styling", video: "/perm-hairstyle.mp4" },
+                { name: "Grooming Packages", video: "/grooming-package.mp4" },
+                { name: "Beard Trimming", video: "/beard-lineup.mp4" },
                 { name: "Manicure", img: "/manicure man.jpg" },
-                { name: "Pedicure", video: "/pedicure men.mp4" },
+                { name: "Pedicure", video: "/pedicure-men.mp4" },
                 { name: "Facial Treatment", img: "/FACIAl.jpeg" },
               ].map((s, idx) => (
                 <div key={`${loopIdx}-${idx}`} className="service-card" style={{ backgroundImage: s.img ? `url("${s.img}")` : "none" }}>
@@ -1382,7 +1382,7 @@ function Wonderstouch() {
 
 
       {/* GALLERY */}
-      <section className="ws-section" style={{ background: "#F5F0E8", color: "#3D3D3D", padding: "40px 0 100px" }}>
+      <section className="ws-section" style={{ background: "#111111", color: "#E8E0D5", padding: "40px 0 100px" }}>
         <div className="ws-container">
           <Reveal>
             <div style={{ textAlign: "center", marginBottom: 30 }}>
@@ -1390,7 +1390,7 @@ function Wonderstouch() {
                   className="bebas"
                   style={{
                     fontSize: "clamp(32px, 4vw, 48px)",
-                    color: "#111",
+                    color: "#fff",
                     margin: 0,
                   }}
                 >
@@ -1400,8 +1400,9 @@ function Wonderstouch() {
           </Reveal>
           <div
             style={{
-              columnCount: isMobile ? 1 : 3,
-              columnGap: 10,
+              display: "grid",
+              gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fill, minmax(350px, 1fr))",
+              gap: 15,
             }}
           >
             {GALLERY.map((src, i) => {
@@ -1411,10 +1412,11 @@ function Wonderstouch() {
                   key={i}
                   className="gallery-item"
                   style={{
-                    breakInside: "avoid",
-                    marginBottom: 10,
                     position: "relative",
                     overflow: "hidden",
+                    aspectRatio: "3/4",
+                    background: "#1A1A1A",
+                    borderRadius: 4,
                   }}
                 >
                   {isVideo ? (
@@ -1427,8 +1429,10 @@ function Wonderstouch() {
                       playsInline
                       style={{
                         width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
                         display: "block",
-                        transition: "transform 0.3s ease",
+                        transition: "transform 0.5s ease",
                       }}
                     />
                   ) : (
@@ -1438,26 +1442,29 @@ function Wonderstouch() {
                       alt={`Gallery ${i + 1}`}
                       style={{
                         width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
                         display: "block",
-                        transition: "transform 0.3s ease",
+                        transition: "transform 0.5s ease",
                       }}
                     />
                   )}
-                <div
-                  className="gallery-overlay"
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    background: "rgba(212,175,55,0.18)",
-                    opacity: 0,
-                    transition: "opacity 0.3s ease",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <ZoomIn size={32} color="#fff" />
-                </div>
+                  <div
+                    className="gallery-overlay"
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      background: "rgba(212,175,55,0.2)",
+                      opacity: 0,
+                      transition: "opacity 0.3s ease",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      zIndex: 2,
+                    }}
+                  >
+                    <ZoomIn size={32} color="#fff" />
+                  </div>
                 </div>
               );
             })}
@@ -1470,7 +1477,7 @@ function Wonderstouch() {
               gap: 8,
               marginTop: 40,
               fontSize: 13,
-              color: "#3D3D3D",
+              color: "#888",
             }}
           >
             <Instagram size={18} color="#D4AF37" />
