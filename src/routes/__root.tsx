@@ -72,14 +72,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "VYNE Barbershop" },
+      { title: "SAM Gents Salon" },
       {
         name: "description",
         content:
           "Premium barbershop in Ajman offering modern cuts, grooming, and professional barber services.",
       },
-      { name: "author", content: "VYNE Barbershop" },
-      { property: "og:title", content: "VYNE Barbershop" },
+      { name: "author", content: "SAM Gents Salon" },
+      { property: "og:title", content: "SAM Gents Salon" },
       {
         property: "og:description",
         content:
@@ -87,7 +87,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@vynebarbershop" },
+      { name: "twitter:site", content: "@samgentssalon" },
     ],
     links: [
       {

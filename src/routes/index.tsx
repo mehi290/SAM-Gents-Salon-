@@ -22,14 +22,14 @@ import {
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
-  component: VyneBarbershop,
+  component: SAMGentsSalon,
   head: () => ({
     meta: [
-      { title: "VYNE Barbershop" },
+      { title: "SAM Gents Salon" },
       {
         name: "description",
         content:
-          "Premium barbershop in Ajman offering modern cuts, grooming, and professional barber services.",
+          "Premium barbershop in Dubai offering modern cuts, grooming, and professional barber services.",
       },
     ],
   }),
@@ -68,15 +68,16 @@ const LOCATIONS: Record<
 > = {
   ajman: {
     flag: "🇦🇪",
-    label: "AJMAN",
-    address: "Al Helio 2 St 2, Helio, Ajman, United Arab Emirates",
+    label: "DUBAI",
+    address: "Wavez by Danube Building, Wadi Al Safa 2, Liwan, Dubai, UAE",
     phone: "+971 67416264",
     whatsapp: "+971 67416264",
     hours: "Sat–Thu: 9:00 AM – 10:00 PM  •  Fri: 2:00 PM – 10:00 PM",
     currency: "AED",
-    mapLabel: "Al Helio 2, Ajman",
-    mapSearchQuery: "Al Helio 2 St 2, Helio, Ajman, United Arab Emirates",
-    mapZoom: 14,
+    mapLabel: "Wavez by Danube, Liwan, Dubai",
+    mapSearchQuery: "Wavez by Danube, Wadi Al Safa 2, Liwan, Dubai",
+    mapEmbedSrc: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3612.3996547630737!2d55.39515027520427!3d25.11867167777712!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f67b848c0b56d%3A0x63351d8b6715f6ea!2sWavez%20by%20Danube!5e0!3m2!1sen!2sae!4v1716300000000!5m2!1sen!2sae",
+    mapZoom: 15,
   },
 };
 
@@ -112,7 +113,7 @@ const PRICE_LIST_SUB = [
 
 
 const SERVICES = [
-  { name: "Hair Cut", desc: "Precision haircuts and beards in the heart of Ajman." },
+  { name: "Hair Cut", desc: "Precision haircuts and beards in the heart of Dubai." },
   { name: "Kids Hair Cut", desc: "Special attention for our younger gentlemen." },
   { name: "Beard Trimming", desc: "Expert beard shaping, lining, and conditioning." },
   { name: "Hair Perm & Styling", desc: "Modern textures and styling for men." },
@@ -125,26 +126,26 @@ const SERVICES = [
 ];
 
 const GALLERY = [
-  "/men-hair-style.mp4",
+  "/services.mp4",
   "/perm-hairstyle.mp4",
   "/men-hair-color.mp4",
   "/our-work.mp4",
-  "/vyne-hero.mp4",
+  "/hero sam salon.mp4",
 ];
 
 const REVIEWS = [
   {
     quote:
-      "The best fade I've ever had — and I've sat in chairs across London, Riyadh, and New York. VYNE BARBERSHOP Ajman is on another level. The hot towel shave alone is worth the visit.",
+      "The best fade I've ever had — and I've sat in chairs across London, Riyadh, and New York. SAM Gents Salon Dubai is on another level. The hot towel shave alone is worth the visit.",
     name: "Khalid A.",
-    where: "Al Helio, Ajman",
+    where: "Liwan, Dubai",
     initial: "K",
   },
   {
     quote:
       "I drive from Business Bay every two weeks just for this place. My barber knows exactly what I want before I even sit down. Sharp, fast, and professional every single time.",
     name: "Marcus T.",
-    where: "Helio, Ajman",
+    where: "Liwan, Dubai",
     initial: "M",
   },
 ];
@@ -153,7 +154,7 @@ const BARBERS = [
   {
     name: "Marcus",
     title: "SENIOR FADE SPECIALIST",
-    bio: "10 years of precision fades and taper cuts, trained across London and Ajman.",
+    bio: "10 years of precision fades and taper cuts, trained across London and Dubai.",
     img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80",
   },
   {
@@ -282,7 +283,7 @@ function GoldButton({
   );
 }
 
-function VyneBarbershop() {
+function SAMGentsSalon() {
   const [location, setLocation] = useState<LocationKey>("ajman");
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -513,8 +514,8 @@ function VyneBarbershop() {
       >
         <div style={{ height: 120, marginLeft: 20 }}>
           <img
-            src="/vyne logo.png"
-            alt="VYNE BARBERSHOP Logo"
+            src="/sam salon logo no background.png"
+            alt="SAM Gents Salon Logo"
             style={{ height: "100%", width: "auto", display: "block" }}
           />
         </div>
@@ -714,8 +715,8 @@ function VyneBarbershop() {
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div style={{ height: 90 }}>
                 <img
-                  src="/vyne logo.png"
-                  alt="VYNE BARBERSHOP Logo"
+                  src="/sam salon logo no background.png"
+                  alt="SAM Gents Salon Logo"
                   style={{ height: "100%", width: "auto", display: "block" }}
                 />
               </div>
@@ -848,7 +849,7 @@ function VyneBarbershop() {
             objectFit: "cover",
           }}
         >
-          <source src="/vyne-hero.mp4" type="video/mp4" />
+          <source src="/hero sam salon.mp4" type="video/mp4" />
         </video>
         <div
           style={{
@@ -1204,10 +1205,10 @@ function VyneBarbershop() {
               {[...Array(3)].map((_, loopIdx) => (
                 <React.Fragment key={loopIdx}>
                   {[
-                    { name: "Gujjar Badsha", initial: "G", location: "Helio, Ajman", text: "Best experience ever, the staff is very professional and the atmosphere is great." },
-                    { name: "Sufaid cherumoth", initial: "S", location: "Helio, Ajman", text: "Highly recommended for anyone looking for a precision cut in Ajman." },
-                    { name: "Frank Lin", initial: "F", location: "Al Helio, Ajman", text: "Great experience with Davido. He really knows how to style according to face shape." },
-                    { name: "James Wilson", initial: "J", location: "Helio, Ajman", text: "Premium products and excellent service. Worth every dirham." }
+                    { name: "Gujjar Badsha", initial: "G", location: "Liwan, Dubai", text: "Best experience ever, the staff is very professional and the atmosphere is great." },
+                    { name: "Sufaid cherumoth", initial: "S", location: "Liwan, Dubai", text: "Highly recommended for anyone looking for a precision cut in Dubai." },
+                    { name: "Frank Lin", initial: "F", location: "Liwan, Dubai", text: "Great experience with Davido. He really knows how to style according to face shape." },
+                    { name: "James Wilson", initial: "J", location: "Liwan, Dubai", text: "Premium products and excellent service. Worth every dirham." }
                   ].map((rev, idx) => (
                     <div key={`${loopIdx}-${idx}`} style={{
                       flex: isMobile ? "0 0 85%" : "0 0 380px",
@@ -1284,11 +1285,11 @@ function VyneBarbershop() {
                     lineHeight: 1,
                   }}
                 >
-                  About vyne-barbershop
+                  About SAM Gents Salon
                 </h2>
                 {[
-                  "VYNE BARBERSHOP wasn’t built to be just another barbershop, it was built to be yours.",
-                  "Based in Ajman. 15+ internationally trained barbers. One standard: leave looking your sharpest.",
+                  "SAM Gents Salon wasn't built to be just another barbershop, it was built to be yours.",
+                  "Based in Dubai. 15+ internationally trained barbers. One standard: leave looking your sharpest.",
                   "Walk in. Sit down. Leave sharp.",
                 ].map((p, i) => (
                   <p
@@ -1327,8 +1328,8 @@ function VyneBarbershop() {
                 </div>
               </div>
               <img
-                src="/vyne about us.jpeg"
-                alt="About VYNE BARBERSHOP"
+                src="/about sam salon.jpg"
+                alt="About SAM Gents Salon"
                 style={{
                   width: "100%",
                   height: isMobile ? 300 : 540,
@@ -1434,7 +1435,7 @@ function VyneBarbershop() {
             })}
           </div>
           <a
-            href="https://www.instagram.com/vynesalon?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+            href="https://www.instagram.com/samgentssalon"
             target="_blank"
             rel="noopener noreferrer"
             style={{
@@ -1453,7 +1454,7 @@ function VyneBarbershop() {
           >
             <Instagram size={18} color="#D4AF37" />
             <span>Follow our work on Instagram</span>
-            <span style={{ color: "#D4AF37", fontWeight: 600 }}>@vynesalon</span>
+            <span style={{ color: "#D4AF37", fontWeight: 600 }}>@samgentssalon</span>
             <ArrowRight size={14} color="#D4AF37" />
           </a>
         </div>
@@ -1671,7 +1672,7 @@ function VyneBarbershop() {
               lineHeight: 1.05,
             }}
           >
-            NEW TO VYNE BARBERSHOP? 20% OFF YOUR FIRST CUT
+            NEW TO SAM GENTS SALON? 20% OFF YOUR FIRST CUT
           </h2>
           <p
             style={{
@@ -1681,7 +1682,7 @@ function VyneBarbershop() {
               lineHeight: 1.7,
             }}
           >
-            Valid for new male clients at our Ajman barbershop. No code needed —
+            Valid for new male clients at our Dubai barbershop. No code needed —
             just mention it when you WhatsApp to book your chair.
           </p>
           <div
@@ -1756,7 +1757,7 @@ function VyneBarbershop() {
                     margin: "16px 0 24px",
                   }}
                 >
-                  VISIT VYNE BARBERSHOP
+                  VISIT SAM GENTS SALON
                 </h2>
 
                 <div style={{ marginTop: 32, display: "flex", flexDirection: "column", gap: 18 }}>
@@ -1831,7 +1832,7 @@ function VyneBarbershop() {
               >
                 <iframe
                   key={location}
-                  title={`VYNE BARBERSHOP ${loc.label} — Google Map`}
+                  title={`SAM Gents Salon ${loc.label} — Google Map`}
                   src={
                     loc.mapEmbedSrc ??
                     googleMapsEmbedSrc(
@@ -1874,7 +1875,7 @@ function VyneBarbershop() {
                 className="bebas"
                 style={{ fontSize: 30, color: "#D4AF37", letterSpacing: "0.2em" }}
               >
-                VYNE BARBERSHOP
+                SAM GENTS SALON
               </div>
               <div
                 style={{
@@ -1925,16 +1926,16 @@ function VyneBarbershop() {
                   "Our Work",
                   "Meet the Barbers",
                   "Pricing",
-                  "Ajman",
+                  "Dubai",
                   "Contact",
                 ],
               },
               {
                 title: "GET IN TOUCH",
                 items: [
-                  "Al Helio 2, Ajman",
+                  "Wavez by Danube Building, Wadi Al Safa 2, Liwan, Dubai",
                   loc.phone,
-                  "hello@vyne-barbershop.com",
+                  "hello@samgentssalon.com",
                   "Sat–Sun: 9am – 10pm",
                 ],
               },
@@ -1981,7 +1982,7 @@ function VyneBarbershop() {
               color: "#444",
             }}
           >
-            <div>© 2026 VYNE BARBERSHOP. All Rights Reserved.</div>
+            <div>© 2026 SAM Gents Salon. All Rights Reserved.</div>
             <div style={{ display: "flex", gap: 16 }}>
               <span className="footer-link" style={{ cursor: "pointer", transition: "color 0.3s" }}>
                 Privacy Policy
@@ -2089,7 +2090,7 @@ function BookingModal({
   });
   const times = ["10:00", "11:30", "13:00", "14:30", "16:00", "17:30", "19:00"];
 
-  const summary = `Booking at VYNE BARBERSHOP ${LOCATIONS[location].label}\nService: ${service}\nBarber: ${barber}\nDate: ${date}\nTime: ${time}\nName: ${name}\nPhone: ${phone}`;
+  const summary = `Booking at SAM Gents Salon ${LOCATIONS[location].label}\nService: ${service}\nBarber: ${barber}\nDate: ${date}\nTime: ${time}\nName: ${name}\nPhone: ${phone}`;
   const waLink = `https://wa.me/${LOCATIONS[location].whatsapp.replace(/\D/g, "")}?text=${encodeURIComponent(summary)}`;
 
   return (
@@ -2422,7 +2423,7 @@ function BookingModal({
                         lineHeight: 2,
                       }}
                     >
-                      <div><b>Location:</b> VYNE BARBERSHOP {LOCATIONS[location].label}</div>
+                      <div><b>Location:</b> SAM Gents Salon {LOCATIONS[location].label}</div>
                       <div><b>Service:</b> {service}</div>
                       <div><b>Barber:</b> {barber}</div>
                       <div><b>Date:</b> {date} @ {time}</div>
