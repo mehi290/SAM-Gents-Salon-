@@ -289,6 +289,7 @@ function SAMGentsSalon() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showLocationModal, setShowLocationModal] = useState(false);
+  const heroVideoRef = useRef<HTMLVideoElement>(null);
 
   // Auto-scroll logic for Services
   useEffect(() => {
@@ -445,6 +446,18 @@ function SAMGentsSalon() {
       @media (min-width: 769px) {
         .mobile-only { display:none !important; }
       }
+      /* iOS Safari video fix: hardware acceleration + ensure visibility */
+      video {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+      }
+      /* Fix for iOS Safari where position:absolute video inside overflow:hidden may not render */
+      .hero-video-section {
+        -webkit-mask-image: -webkit-radial-gradient(white, black);
+        mask-image: radial-gradient(white, black);
+      }
     `;
     document.head.appendChild(style);
     return () => {
@@ -458,6 +471,35 @@ function SAMGentsSalon() {
     onR();
     window.addEventListener("resize", onR);
     return () => window.removeEventListener("resize", onR);
+  }, []);
+
+  // Force video play on iOS/mobile — iOS Safari blocks autoplay until .play() is called programmatically
+  useEffect(() => {
+    const vid = heroVideoRef.current;
+    if (!vid) return;
+    const tryPlay = () => {
+      vid.muted = true;
+      const p = vid.play();
+      if (p !== undefined) {
+        p.catch(() => {
+          // Autoplay was prevented — video will stay hidden, fallback handled by CSS
+        });
+      }
+    };
+    // Try immediately
+    tryPlay();
+    // Also try on first user interaction (required by some strict browsers)
+    const onInteract = () => {
+      tryPlay();
+      document.removeEventListener("touchstart", onInteract);
+      document.removeEventListener("click", onInteract);
+    };
+    document.addEventListener("touchstart", onInteract, { passive: true });
+    document.addEventListener("click", onInteract);
+    return () => {
+      document.removeEventListener("touchstart", onInteract);
+      document.removeEventListener("click", onInteract);
+    };
   }, []);
 
   // scroll
@@ -825,6 +867,7 @@ function SAMGentsSalon() {
 
       {/* HERO */}
       <section
+        className="hero-video-section"
         style={{
           minHeight: "110vh",
           position: "relative",
@@ -836,17 +879,23 @@ function SAMGentsSalon() {
         }}
       >
         <video
+          ref={heroVideoRef}
           autoPlay
           muted
           loop
           playsInline
           preload="auto"
+          {...{ "webkit-playsinline": "" } as Record<string, string>}
           style={{
             position: "absolute",
             inset: 0,
             width: "100%",
             height: "100%",
             objectFit: "cover",
+            objectPosition: "center center",
+            // Force hardware acceleration on mobile
+            WebkitTransform: "translateZ(0)",
+            transform: "translateZ(0)",
           }}
         >
           <source src="/hero sam salon.mp4" type="video/mp4" />
