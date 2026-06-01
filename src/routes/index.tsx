@@ -921,9 +921,9 @@ function SAMGentsSalon() {
             opacity: 1,
           }}
         >
-          {/* Space in filename encoded for mobile browser compatibility */}
-          <source src="/hero%20sam%20salon.mp4" type="video/mp4" />
-          <source src="/hero sam salon.mp4" type="video/mp4" />
+          {/* URL-encoded for mobile browser compatibility */}
+          <source src="/sam%20salon%20hero%20video.mp4" type="video/mp4" />
+          <source src="/sam salon hero video.mp4" type="video/mp4" />
         </video>
         <div
           style={{
