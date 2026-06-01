@@ -473,32 +473,51 @@ function SAMGentsSalon() {
     return () => window.removeEventListener("resize", onR);
   }, []);
 
-  // Force video play on iOS/mobile — iOS Safari blocks autoplay until .play() is called programmatically
+  // ── iOS Safari video fix ─────────────────────────────────────────────────
+  // CRITICAL: React has a known bug where the `muted` JSX prop is NOT applied
+  // to the real DOM element. iOS Safari sees the video as unmuted and blocks
+  // autoplay. We must set .muted = true directly on the DOM node via ref.
+  // We also must call .load() then .play() explicitly for iOS.
   useEffect(() => {
     const vid = heroVideoRef.current;
     if (!vid) return;
+
+    // 1. Fix the React muted bug — set directly on DOM node
+    vid.muted = true;
+    vid.volume = 0;
+
+    // 2. Set webkit-playsinline for older iOS via DOM (JSX spread is unreliable)
+    vid.setAttribute("playsinline", "");
+    vid.setAttribute("webkit-playsinline", "");
+    vid.setAttribute("x-webkit-airplay", "allow");
+
+    // 3. Load then play
     const tryPlay = () => {
       vid.muted = true;
+      vid.load();
       const p = vid.play();
       if (p !== undefined) {
         p.catch(() => {
-          // Autoplay was prevented — video will stay hidden, fallback handled by CSS
+          // Still blocked — will try again on first touch
         });
       }
     };
-    // Try immediately
+
     tryPlay();
-    // Also try on first user interaction (required by some strict browsers)
-    const onInteract = () => {
-      tryPlay();
-      document.removeEventListener("touchstart", onInteract);
-      document.removeEventListener("click", onInteract);
+
+    // 4. Retry on first user touch (some strict mobile browsers need this)
+    const onTouch = () => {
+      vid.muted = true;
+      vid.play().catch(() => {});
+      document.removeEventListener("touchstart", onTouch);
+      document.removeEventListener("click", onTouch);
     };
-    document.addEventListener("touchstart", onInteract, { passive: true });
-    document.addEventListener("click", onInteract);
+    document.addEventListener("touchstart", onTouch, { passive: true });
+    document.addEventListener("click", onTouch);
+
     return () => {
-      document.removeEventListener("touchstart", onInteract);
-      document.removeEventListener("click", onInteract);
+      document.removeEventListener("touchstart", onTouch);
+      document.removeEventListener("click", onTouch);
     };
   }, []);
 
@@ -885,25 +904,32 @@ function SAMGentsSalon() {
           loop
           playsInline
           preload="auto"
-          {...{ "webkit-playsinline": "" } as Record<string, string>}
           style={{
             position: "absolute",
-            inset: 0,
+            top: 0,
+            left: 0,
             width: "100%",
             height: "100%",
             objectFit: "cover",
             objectPosition: "center center",
-            // Force hardware acceleration on mobile
             WebkitTransform: "translateZ(0)",
             transform: "translateZ(0)",
+            WebkitBackfaceVisibility: "hidden",
+            backfaceVisibility: "hidden",
+            // Ensure it's visible and behind overlay
+            zIndex: 0,
+            opacity: 1,
           }}
         >
+          {/* Space in filename encoded for mobile browser compatibility */}
+          <source src="/hero%20sam%20salon.mp4" type="video/mp4" />
           <source src="/hero sam salon.mp4" type="video/mp4" />
         </video>
         <div
           style={{
             position: "absolute",
             inset: 0,
+            zIndex: 1,
             background:
               "linear-gradient(180deg, rgba(10,10,10,0.5) 0%, rgba(10,10,10,0.2) 55%, rgba(10,10,10,0.6) 100%)",
           }}
@@ -911,7 +937,7 @@ function SAMGentsSalon() {
         <div
           style={{
             position: "relative",
-            zIndex: 1,
+            zIndex: 2,
             width: "100%",
             maxWidth: 800,
             margin: "60px auto 0",
